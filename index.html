@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Windows 95</title>
+<style>
+body {
+  margin: 0;
+  background: #008080;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  overflow: hidden;
+}
+
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 32px;
+  background: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+.start-button {
+  margin-left: 4px;
+  height: 24px;
+  padding: 0 10px;
+  background: #c0c0c0;
+  border: 2px outset #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.start-button:active {
+  border: 2px inset #fff;
+}
+
+.start-menu {
+  position: fixed;
+  bottom: 32px;
+  left: 4px;
+  width: 200px;
+  background: #c0c0c0;
+  border: 2px outset #fff;
+  display: none;
+  padding: 5px;
+}
+
+.menu-item {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #000080;
+  color: white;
+}
+
+.window {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 400px;
+  background: #c0c0c0;
+  border: 2px outset #fff;
+}
+
+.title-bar {
+  background: #000080;
+  color: white;
+  padding: 4px;
+  cursor: move;
+  font-size: 14px;
+}
+
+.window-content {
+  padding: 10px;
+  background: #ffffff;
+  height: 200px;
+  overflow: auto;
+}
+</style>
+</head>
+<body>
+
+<div class="window" id="win">
+  <div class="title-bar" id="title">My Computer</div>
+  <div class="window-content">
+    Welcome to Windows 95.<br><br>
+    This is a browser recreation.
+  </div>
+</div>
+
+<div class="start-menu" id="startMenu">
+  <div class="menu-item">Programs</div>
+  <div class="menu-item">Documents</div>
+  <div class="menu-item">Settings</div>
+  <div class="menu-item">Shut Down...</div>
+</div>
+
+<div class="taskbar">
+  <button class="start-button" onclick="toggleMenu()">Start</button>
+</div>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById("startMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+// Dragging logic
+const win = document.getElementById("win");
+const title = document.getElementById("title");
+
+let offsetX = 0, offsetY = 0, isDown = false;
+
+title.addEventListener("mousedown", e => {
+  isDown = true;
+  offsetX = win.offsetLeft - e.clientX;
+  offsetY = win.offsetTop - e.clientY;
+});
+
+document.addEventListener("mouseup", () => isDown = false);
+
+document.addEventListener("mousemove", e => {
+  if (isDown) {
+    win.style.left = (e.clientX + offsetX) + "px";
+    win.style.top = (e.clientY + offsetY) + "px";
+  }
+});
+</script>
+
+</body>
+</html>
