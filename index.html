@@ -21,14 +21,17 @@ body {
   font-size: 12px;
 }
 
-.icon-img {
-  font-size: 32px;
+.desktop-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border: 2px outset white;
 }
 
 .window {
   position: absolute;
-  width: 600px;
-  height: 400px;
+  width: 700px;
+  height: 500px;
   background: #c0c0c0;
   border: 2px outset white;
   display: none;
@@ -92,10 +95,6 @@ iframe {
   cursor: pointer;
 }
 
-.start-button:active {
-  border: 2px inset white;
-}
-
 .start-menu {
   position: fixed;
   bottom: 32px;
@@ -115,49 +114,66 @@ iframe {
   background: #000080;
   color: white;
 }
+
+.browser-bar {
+  background: #e0e0e0;
+  padding: 4px;
+  display: flex;
+}
+
+.browser-bar input {
+  flex: 1;
+  padding: 4px;
+  border: 2px inset white;
+}
+
+.browser-bar button {
+  margin-left: 4px;
+  border: 2px outset white;
+  background: #c0c0c0;
+}
 </style>
 </head>
 <body>
 
 <div style="display:flex; flex-wrap:wrap; width:200px;">
   <div class="desktop-icon" onclick="openWindow('ie')">
-    <div class="icon-img">🌐</div>
-    Internet Explorer
+    <div style="font-size:32px;">🌐</div>
+    <div>Internet Explorer</div>
   </div>
+
   <div class="desktop-icon" onclick="openWindow('doom')">
-    <div class="icon-img">💀</div>
-    DOOM
-  </div>
-  <div class="desktop-icon" onclick="openWindow('notepad')">
-    <div class="icon-img">📝</div>
-    Notepad
-  </div>
-  <div class="desktop-icon" onclick="openWindow('computer')">
-    <div class="icon-img">💾</div>
-    My Computer
+    <img src="https://upload.wikimedia.org/wikipedia/en/5/57/Doom_cover_art.jpg">
+    <div>DOOM</div>
   </div>
 </div>
 
-<!-- Windows -->
+<!-- Internet Explorer -->
 
 <div class="window" id="ie">
   <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
     Internet Explorer
     <div class="window-controls">
-      <button onclick="minimize(event)">_</button>
       <button onclick="closeWin(event)">X</button>
     </div>
   </div>
+
+  <div class="browser-bar">
+    <input id="searchInput" placeholder="Search the web...">
+    <button onclick="search()">Go</button>
+  </div>
+
   <div class="window-content">
-    <iframe src="https://romania.dinprima.ro"></iframe>
+    <iframe id="browserFrame"></iframe>
   </div>
 </div>
+
+<!-- Doom -->
 
 <div class="window" id="doom">
   <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
     DOOM
     <div class="window-controls">
-      <button onclick="minimize(event)">_</button>
       <button onclick="closeWin(event)">X</button>
     </div>
   </div>
@@ -166,43 +182,9 @@ iframe {
   </div>
 </div>
 
-<div class="window" id="notepad">
-  <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
-    Notepad
-    <div class="window-controls">
-      <button onclick="minimize(event)">_</button>
-      <button onclick="closeWin(event)">X</button>
-    </div>
-  </div>
-  <div class="window-content">
-    <textarea style="width:100%; height:100%; border:none; resize:none;"></textarea>
-  </div>
-</div>
-
-<div class="window" id="computer">
-  <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
-    My Computer
-    <div class="window-controls">
-      <button onclick="minimize(event)">_</button>
-      <button onclick="closeWin(event)">X</button>
-    </div>
-  </div>
-  <div class="window-content" style="padding:10px;">
-    C:\<br>
-    ├── Program Files<br>
-    ├── Windows<br>
-    ├── Users<br>
-    └── System32
-  </div>
-</div>
-
-<!-- Start Menu -->
-
 <div class="start-menu" id="startMenu">
   <div class="menu-item" onclick="openWindow('ie')">Internet Explorer</div>
   <div class="menu-item" onclick="openWindow('doom')">DOOM</div>
-  <div class="menu-item" onclick="openWindow('notepad')">Notepad</div>
-  <div class="menu-item" onclick="shutdown()">Shut Down...</div>
 </div>
 
 <div class="taskbar">
@@ -226,18 +208,9 @@ function closeWin(e) {
   e.target.closest(".window").style.display = "none";
 }
 
-function minimize(e) {
-  e.stopPropagation();
-  e.target.closest(".window").style.display = "none";
-}
-
 function toggleMenu() {
   const m = document.getElementById("startMenu");
   m.style.display = m.style.display === "block" ? "none" : "block";
-}
-
-function shutdown() {
-  document.body.innerHTML = "<div style='background:black;color:white;font-size:40px;text-align:center;margin-top:20%;'>It is now safe to turn off your computer.</div>";
 }
 
 function dragStart(e, win) {
@@ -256,6 +229,12 @@ document.addEventListener("mousemove", e => {
 });
 
 document.addEventListener("mouseup", () => dragData = null);
+
+function search() {
+  const q = document.getElementById("searchInput").value;
+  if (!q) return;
+  document.getElementById("browserFrame").src = "/api/search?q=" + encodeURIComponent(q);
+}
 </script>
 
 </body>
