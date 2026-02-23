@@ -2,13 +2,73 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Windows 95</title>
+<title>Windows 95 Web OS</title>
 <style>
 body {
   margin: 0;
   background: #008080;
-  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  font-family: Tahoma, sans-serif;
   overflow: hidden;
+  user-select: none;
+}
+
+.desktop-icon {
+  width: 72px;
+  text-align: center;
+  color: white;
+  margin: 15px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.icon-img {
+  font-size: 32px;
+}
+
+.window {
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  background: #c0c0c0;
+  border: 2px outset white;
+  display: none;
+}
+
+.title-bar {
+  background: #000080;
+  color: white;
+  padding: 4px;
+  cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.window-controls button {
+  background: #c0c0c0;
+  border: 2px outset white;
+  margin-left: 2px;
+  width: 22px;
+  height: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.window-controls button:active {
+  border: 2px inset white;
+}
+
+.window-content {
+  height: calc(100% - 28px);
+  background: white;
+  overflow: hidden;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 .taskbar {
@@ -17,7 +77,7 @@ body {
   width: 100%;
   height: 32px;
   background: #c0c0c0;
-  border-top: 2px solid #ffffff;
+  border-top: 2px solid white;
   display: flex;
   align-items: center;
 }
@@ -27,13 +87,13 @@ body {
   height: 24px;
   padding: 0 10px;
   background: #c0c0c0;
-  border: 2px outset #fff;
+  border: 2px outset white;
   font-weight: bold;
   cursor: pointer;
 }
 
 .start-button:active {
-  border: 2px inset #fff;
+  border: 2px inset white;
 }
 
 .start-menu {
@@ -42,13 +102,12 @@ body {
   left: 4px;
   width: 200px;
   background: #c0c0c0;
-  border: 2px outset #fff;
+  border: 2px outset white;
   display: none;
-  padding: 5px;
 }
 
 .menu-item {
-  padding: 4px;
+  padding: 6px;
   cursor: pointer;
 }
 
@@ -56,47 +115,94 @@ body {
   background: #000080;
   color: white;
 }
-
-.window {
-  position: absolute;
-  top: 100px;
-  left: 100px;
-  width: 400px;
-  background: #c0c0c0;
-  border: 2px outset #fff;
-}
-
-.title-bar {
-  background: #000080;
-  color: white;
-  padding: 4px;
-  cursor: move;
-  font-size: 14px;
-}
-
-.window-content {
-  padding: 10px;
-  background: #ffffff;
-  height: 200px;
-  overflow: auto;
-}
 </style>
 </head>
 <body>
 
-<div class="window" id="win">
-  <div class="title-bar" id="title">My Computer</div>
-  <div class="window-content">
-    Welcome to Windows 95.<br><br>
-    This is a browser recreation.
+<div style="display:flex; flex-wrap:wrap; width:200px;">
+  <div class="desktop-icon" onclick="openWindow('ie')">
+    <div class="icon-img">🌐</div>
+    Internet Explorer
+  </div>
+  <div class="desktop-icon" onclick="openWindow('doom')">
+    <div class="icon-img">💀</div>
+    DOOM
+  </div>
+  <div class="desktop-icon" onclick="openWindow('notepad')">
+    <div class="icon-img">📝</div>
+    Notepad
+  </div>
+  <div class="desktop-icon" onclick="openWindow('computer')">
+    <div class="icon-img">💾</div>
+    My Computer
   </div>
 </div>
 
+<!-- Windows -->
+
+<div class="window" id="ie">
+  <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
+    Internet Explorer
+    <div class="window-controls">
+      <button onclick="minimize(event)">_</button>
+      <button onclick="closeWin(event)">X</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <iframe src="https://romania.dinprima.ro"></iframe>
+  </div>
+</div>
+
+<div class="window" id="doom">
+  <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
+    DOOM
+    <div class="window-controls">
+      <button onclick="minimize(event)">_</button>
+      <button onclick="closeWin(event)">X</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <iframe src="https://db.duck.exampredictor.org/html/doom_1/index.html"></iframe>
+  </div>
+</div>
+
+<div class="window" id="notepad">
+  <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
+    Notepad
+    <div class="window-controls">
+      <button onclick="minimize(event)">_</button>
+      <button onclick="closeWin(event)">X</button>
+    </div>
+  </div>
+  <div class="window-content">
+    <textarea style="width:100%; height:100%; border:none; resize:none;"></textarea>
+  </div>
+</div>
+
+<div class="window" id="computer">
+  <div class="title-bar" onmousedown="dragStart(event,this.parentElement)">
+    My Computer
+    <div class="window-controls">
+      <button onclick="minimize(event)">_</button>
+      <button onclick="closeWin(event)">X</button>
+    </div>
+  </div>
+  <div class="window-content" style="padding:10px;">
+    C:\<br>
+    ├── Program Files<br>
+    ├── Windows<br>
+    ├── Users<br>
+    └── System32
+  </div>
+</div>
+
+<!-- Start Menu -->
+
 <div class="start-menu" id="startMenu">
-  <div class="menu-item">Programs</div>
-  <div class="menu-item">Documents</div>
-  <div class="menu-item">Settings</div>
-  <div class="menu-item">Shut Down...</div>
+  <div class="menu-item" onclick="openWindow('ie')">Internet Explorer</div>
+  <div class="menu-item" onclick="openWindow('doom')">DOOM</div>
+  <div class="menu-item" onclick="openWindow('notepad')">Notepad</div>
+  <div class="menu-item" onclick="shutdown()">Shut Down...</div>
 </div>
 
 <div class="taskbar">
@@ -104,31 +210,52 @@ body {
 </div>
 
 <script>
-function toggleMenu() {
-  const menu = document.getElementById("startMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+let z = 1;
+let dragData = null;
+
+function openWindow(id) {
+  const win = document.getElementById(id);
+  win.style.display = "block";
+  win.style.zIndex = ++z;
+  win.style.top = "80px";
+  win.style.left = "120px";
 }
 
-// Dragging logic
-const win = document.getElementById("win");
-const title = document.getElementById("title");
+function closeWin(e) {
+  e.stopPropagation();
+  e.target.closest(".window").style.display = "none";
+}
 
-let offsetX = 0, offsetY = 0, isDown = false;
+function minimize(e) {
+  e.stopPropagation();
+  e.target.closest(".window").style.display = "none";
+}
 
-title.addEventListener("mousedown", e => {
-  isDown = true;
-  offsetX = win.offsetLeft - e.clientX;
-  offsetY = win.offsetTop - e.clientY;
-});
+function toggleMenu() {
+  const m = document.getElementById("startMenu");
+  m.style.display = m.style.display === "block" ? "none" : "block";
+}
 
-document.addEventListener("mouseup", () => isDown = false);
+function shutdown() {
+  document.body.innerHTML = "<div style='background:black;color:white;font-size:40px;text-align:center;margin-top:20%;'>It is now safe to turn off your computer.</div>";
+}
+
+function dragStart(e, win) {
+  win.style.zIndex = ++z;
+  dragData = {
+    win: win,
+    offsetX: e.clientX - win.offsetLeft,
+    offsetY: e.clientY - win.offsetTop
+  };
+}
 
 document.addEventListener("mousemove", e => {
-  if (isDown) {
-    win.style.left = (e.clientX + offsetX) + "px";
-    win.style.top = (e.clientY + offsetY) + "px";
-  }
+  if (!dragData) return;
+  dragData.win.style.left = e.clientX - dragData.offsetX + "px";
+  dragData.win.style.top = e.clientY - dragData.offsetY + "px";
 });
+
+document.addEventListener("mouseup", () => dragData = null);
 </script>
 
 </body>
