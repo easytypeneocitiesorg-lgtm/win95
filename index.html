@@ -13,7 +13,7 @@ body {
 }
 
 .desktop-icon {
-  width: 72px;
+  width: 80px;
   text-align: center;
   color: white;
   margin: 15px;
@@ -30,8 +30,8 @@ body {
 
 .window {
   position: absolute;
-  width: 700px;
-  height: 500px;
+  width: 900px;
+  height: 600px;
   background: #c0c0c0;
   border: 2px outset white;
   display: none;
@@ -58,14 +58,28 @@ body {
   cursor: pointer;
 }
 
-.window-controls button:active {
+.window-content {
+  height: calc(100% - 60px);
+  background: white;
+  overflow: hidden;
+}
+
+.browser-bar {
+  background: #e0e0e0;
+  padding: 4px;
+  display: flex;
+}
+
+.browser-bar input {
+  flex: 1;
+  padding: 4px;
   border: 2px inset white;
 }
 
-.window-content {
-  height: calc(100% - 28px);
-  background: white;
-  overflow: hidden;
+.browser-bar button {
+  margin-left: 4px;
+  border: 2px outset white;
+  background: #c0c0c0;
 }
 
 iframe {
@@ -94,44 +108,6 @@ iframe {
   font-weight: bold;
   cursor: pointer;
 }
-
-.start-menu {
-  position: fixed;
-  bottom: 32px;
-  left: 4px;
-  width: 200px;
-  background: #c0c0c0;
-  border: 2px outset white;
-  display: none;
-}
-
-.menu-item {
-  padding: 6px;
-  cursor: pointer;
-}
-
-.menu-item:hover {
-  background: #000080;
-  color: white;
-}
-
-.browser-bar {
-  background: #e0e0e0;
-  padding: 4px;
-  display: flex;
-}
-
-.browser-bar input {
-  flex: 1;
-  padding: 4px;
-  border: 2px inset white;
-}
-
-.browser-bar button {
-  margin-left: 4px;
-  border: 2px outset white;
-  background: #c0c0c0;
-}
 </style>
 </head>
 <body>
@@ -159,8 +135,8 @@ iframe {
   </div>
 
   <div class="browser-bar">
-    <input id="searchInput" placeholder="Search the web...">
-    <button onclick="search()">Go</button>
+    <input id="addressBar" placeholder="Enter URL or search...">
+    <button onclick="go()">Go</button>
   </div>
 
   <div class="window-content">
@@ -182,13 +158,8 @@ iframe {
   </div>
 </div>
 
-<div class="start-menu" id="startMenu">
-  <div class="menu-item" onclick="openWindow('ie')">Internet Explorer</div>
-  <div class="menu-item" onclick="openWindow('doom')">DOOM</div>
-</div>
-
 <div class="taskbar">
-  <button class="start-button" onclick="toggleMenu()">Start</button>
+  <button class="start-button">Start</button>
 </div>
 
 <script>
@@ -208,11 +179,6 @@ function closeWin(e) {
   e.target.closest(".window").style.display = "none";
 }
 
-function toggleMenu() {
-  const m = document.getElementById("startMenu");
-  m.style.display = m.style.display === "block" ? "none" : "block";
-}
-
 function dragStart(e, win) {
   win.style.zIndex = ++z;
   dragData = {
@@ -230,10 +196,18 @@ document.addEventListener("mousemove", e => {
 
 document.addEventListener("mouseup", () => dragData = null);
 
-function search() {
-  const q = document.getElementById("searchInput").value;
-  if (!q) return;
-  document.getElementById("browserFrame").src = "/api/search?q=" + encodeURIComponent(q);
+function go() {
+  const input = document.getElementById("addressBar").value.trim();
+  if (!input) return;
+
+  let url = input;
+
+  if (!input.includes(".")) {
+    url = "https://duckduckgo.com/?q=" + encodeURIComponent(input);
+  }
+
+  document.getElementById("browserFrame").src =
+    "/api/proxy?url=" + encodeURIComponent(url);
 }
 </script>
 
